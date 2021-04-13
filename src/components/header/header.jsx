@@ -28,7 +28,7 @@ const styles = theme => ({
   },
   headerV2: {
     background: colors.white,
-    border: '1px solid '+colors.borderBlue,
+    border: '1px solid '+colors.red,
     borderTop: 'none',
     width: '100%',
     borderRadius: '0px 0px 50px 50px',
@@ -56,7 +56,7 @@ const styles = theme => ({
     cursor: 'pointer',
     '&:hover': {
       paddingBottom: '9px',
-      borderBottom: "3px solid "+colors.borderBlue,
+      borderBottom: "3px solid "+colors.red,
     },
   },
   title: {
@@ -67,7 +67,7 @@ const styles = theme => ({
     margin: '0px 12px',
     cursor: 'pointer',
     paddingBottom: '9px',
-    borderBottom: "3px solid "+colors.borderBlue,
+    borderBottom: "3px solid "+colors.red,
   },
   account: {
     display: 'flex',
@@ -86,19 +86,19 @@ const styles = theme => ({
     alignItems: 'center',
     cursor: 'pointer',
     '&:hover': {
-      border: "2px solid "+colors.borderBlue,
+      border: "2px solid "+colors.red,
       background: 'rgba(47, 128, 237, 0.1)'
     },
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
       position: 'absolute',
       top: '90px',
-      border: "1px solid "+colors.borderBlue,
+      border: "1px solid "+colors.red,
       background: colors.white
     }
   },
   connectedDot: {
-    background: colors.compoundGreen,
+    background: colors.red,
     opacity: '1',
     borderRadius: '10px',
     width: '10px',
@@ -164,15 +164,16 @@ class Header extends Component {
           <div className={ classes.icon }>
             <img
               alt=""
-              src={ require('../../assets/YFI-logo.png') }
-              height={ '40px' }
+              src={ require('../../assets/HelpiLogo.svg') }
+              height={ '80px' }
               onClick={ () => { this.nav('') } }
             />
-            <Typography variant={ 'h3'} className={ classes.name } onClick={ () => { this.nav('') } }>ygov.finance</Typography>
+            {/* <Typography variant={ 'h3'} className={ classes.name } onClick={ () => { this.nav('') } }>ygov.finance</Typography> */}
           </div>
           <div className={ classes.links }>
+            { this.renderLink('lock') }
             { this.renderLink('staking') }
-            { this.renderLink('vote') }
+            { this.renderLink('roadmap') }
           </div>
           <div className={ classes.account }>
             { address &&

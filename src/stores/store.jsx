@@ -79,6 +79,7 @@ class Store {
       web3: null,
       connectorsByName: {
         Celo: injected,
+        Valora: injected,
         // TrustWallet: injected,
         // WalletConnect: walletconnect,
         // WalletLink: walletlink,
@@ -96,14 +97,6 @@ class Store {
         {
           language: 'English',
           code: 'en'
-        },
-        {
-          language: 'Japanese',
-          code: 'ja'
-        },
-        {
-          language: 'Chinese',
-          code: 'zh'
         }
       ],
       proposals: [

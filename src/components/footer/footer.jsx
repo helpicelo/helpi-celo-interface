@@ -110,15 +110,15 @@ class Footer extends Component {
     return (
       <div className={classes.footer}>
         <div className={ classes.builtWith }>
-          <Typography className={ classes.builtHeading } variant={ 'h6'}>ygov.finance</Typography>
+          {/* <Typography className={ classes.builtHeading } variant={ 'h6'}>ygov.finance</Typography> */}
           <img
             alt=""
-            src={ require('../../assets/YFI-logo.png') }
-            height={ '120px' }
-            width={ '120px' }
+            src={ require('../../assets/HelpiLogo.svg') }
+            height={ '200px' }
+            width={ '200px' }
           />
         </div>
-        <div className={ classes.products }>
+        {/* <div className={ classes.products }>
           <Typography className={ classes.heading } variant={ 'h6'}>Products</Typography>
           <div  className={ classes.link } onClick={()=> window.open("https://yearn.finance", "_blank")} >
             <AttachMoneyIcon height='15px' className={ classes.icon } />
@@ -140,8 +140,8 @@ class Footer extends Component {
             <DescriptionIcon height='15px' className={ classes.icon } />
             <Typography variant={ 'h4'} >docs.yearn.finance</Typography>
           </div>
-        </div>
-        <div className={ classes.community }>
+        </div> */}
+        {/* <div className={ classes.community }>
           <Typography className={ classes.heading } variant={ 'h6'}>Community</Typography>
           <div  className={ classes.link } onClick={()=> window.open("https://ycosystem.info", "_blank")} >
             <DescriptionIcon height='15px' className={ classes.icon } />
@@ -190,7 +190,7 @@ class Footer extends Component {
             <img alt="" src={ require('../../assets/github.svg') } height='24px' className={ classes.icon } />
             <Typography variant={ 'h4'} >Github</Typography>
           </div>
-        </div>
+        </div> */}
       </div>
     )
   }

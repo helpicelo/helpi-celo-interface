@@ -5,9 +5,9 @@ import {
   Typography,
   Button,
 } from '@material-ui/core';
-import { colors } from '../../theme'
+import { colors, mxDiv } from '../../theme';
 
-import UnlockModal from '../unlock/unlockModal.jsx'
+import UnlockModal from '../unlock/unlockModal.jsx';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 import {
@@ -19,16 +19,21 @@ import {
 } from '../../constants'
 
 import Store from "../../stores";
+
+// Helpi logo import
+import HelpiLogo from "../../assets/HelpiLogo.svg"
+
 const emitter = Store.emitter
 const dispatcher = Store.dispatcher
 const store = Store.store
 
 const styles = theme => ({
+  mxDiv: mxDiv,
   root: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    background: colors.blue,
+    background: colors.darkBlack,
     minWidth: '100vw',
     padding: '36px 24px'
   },
@@ -88,7 +93,7 @@ const styles = theme => ({
     marginBottom: '24px',
     fontWeight: 1,
     color: colors.white
-  }
+  },
 });
 
 class Account extends Component {
@@ -155,8 +160,12 @@ class Account extends Component {
     const { loading } = this.state
 
     return (
+      
       <div className={ classes.notConnectedRoot }>
-        <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography>
+        <div className={ classes.mxDiv }>
+          <img width="200" alt="helpi logo" src={HelpiLogo}></img>
+        </div>
+        <Typography variant={'h4'} className={ classes.disclaimer }>Helpi is in Beta, please use at your own risk. We tried to add the features we feel confortable deploying, we plan to move forward with that same philosophy.</Typography>
         <div className={ classes.connectHeading }>
           <Typography variant='h3'>Connect your wallet to continue</Typography>
         </div>

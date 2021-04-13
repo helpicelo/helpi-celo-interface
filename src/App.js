@@ -34,6 +34,8 @@ import {
 import { injected } from "./stores/connectors";
 
 import Store from "./stores";
+
+import HelpiLogo from './assets/HelpiLogo.svg'
 const emitter = Store.emitter
 const dispatcher = Store.dispatcher
 const store = Store.store
@@ -119,29 +121,33 @@ class App extends Component {
             </div>
           }
           { account &&
+          
             <div style={{
               display: 'flex',
               flexDirection: 'column',
               minHeight: '100vh',
               justifyContent: 'center',
               alignItems: 'center',
-              background: "#f9fafb"
+              background: "#fff"
             }}>
+              
               <Switch>
+                
                 <Route path="/stake">
                   <Header />
                   <Stake />
                 </Route>
-                <Route path="/staking">
-                <Header />
-                  <VersionToggle />
-                  <RewardsPools />
-                </Route>
-                <Route path="/vote">
+                <Route path="/deposit">
                   <Header />
-                  <VersionToggle />
+                  
                   <Vote />
                 </Route>
+                <Route path="/staking">
+                <Header />
+                  
+                  <RewardsPools />
+                </Route>
+                
                 <Route path="/propose">
                 <Header />
                   <VersionToggle />

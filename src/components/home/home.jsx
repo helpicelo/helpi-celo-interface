@@ -7,9 +7,10 @@ import {
 } from '@material-ui/core';
 import { withNamespaces } from 'react-i18next';
 import { colors } from '../../theme'
-import HowToVoteIcon from '@material-ui/icons/HowToVote';
-import DetailsIcon from '@material-ui/icons/Details';
+
 import LockIcon from '@material-ui/icons/Lock';
+import FilterHdrIcon from '@material-ui/icons/FilterHdr';
+import ExploreIcon from '@material-ui/icons/Explore';
 
 const styles = theme => ({
   root: {
@@ -43,7 +44,7 @@ const styles = theme => ({
   stake: {
     backgroundColor: colors.white,
     '&:hover': {
-      backgroundColor: colors.pink,
+      backgroundColor: colors.red,
       '& .title': {
         color: colors.white
       },
@@ -52,16 +53,16 @@ const styles = theme => ({
       }
     },
     '& .title': {
-      color: colors.pink
+      color: colors.red
     },
     '& .icon': {
-      color: colors.pink
+      color: colors.red
     }
   },
   vote: {
     backgroundColor: colors.white,
     '&:hover': {
-      backgroundColor: colors.blue,
+      backgroundColor: colors.red,
       '& .title': {
         color: colors.white,
       },
@@ -74,17 +75,17 @@ const styles = theme => ({
       display: 'block'
     },
     '& .soon': {
-      color: colors.blue,
+      color: colors.red,
       display: 'none'
     },
     '& .icon': {
-      color: colors.blue
+      color: colors.red
     },
   },
   lock: {
     backgroundColor: colors.white,
     '&:hover': {
-      backgroundColor: colors.tomato,
+      backgroundColor: colors.red,
       '& .title': {
         color: colors.white,
       },
@@ -93,10 +94,10 @@ const styles = theme => ({
       }
     },
     '& .title': {
-      color: colors.tomato,
+      color: colors.red,
     },
     '& .icon': {
-      color: colors.tomato
+      color: colors.red
     },
   },
   title: {
@@ -131,18 +132,18 @@ class Home extends Component {
 
     return (
       <div className={ classes.root }>
-        <Card className={ `${classes.card} ${classes.stake}` } onClick={ () => { this.nav(location.pathname+'staking') } }>
-          <DetailsIcon className={ `${classes.icon} icon` } />
-          <Typography variant={'h3'} className={ `${classes.title} title` }>Stake</Typography>
-        </Card>
-        <Card className={ `${classes.card} ${classes.vote}` } onClick={ () => { this.nav(location.pathname+'vote') } }>
-          <HowToVoteIcon className={ `${classes.icon} icon` } />
-          <Typography variant={'h3'} className={ `${classes.title} title` }>Vote</Typography>
-        </Card>
-        {/*<Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { this.nav(location.pathname+'lock') }}>
+        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { this.nav(location.pathname+'lock') }}>
           <LockIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>Lock</Typography>
-        </Card>*/}
+        </Card>
+        <Card className={ `${classes.card} ${classes.stake}` } onClick={ () => { this.nav(location.pathname+'staking') } }>
+          <FilterHdrIcon className={ `${classes.icon} icon` } />
+          <Typography variant={'h3'} className={ `${classes.title} title` }>Stake</Typography>
+        </Card>
+        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { this.nav(location.pathname+'deposit') } }>
+          <ExploreIcon className={ `${classes.icon} icon` } />
+          <Typography variant={'h3'} className={ `${classes.title} title` }>RoadMap</Typography>
+        </Card>
       </div>
     )
   };
