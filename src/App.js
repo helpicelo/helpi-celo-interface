@@ -132,19 +132,16 @@ class App extends Component {
             }}>
               
               <Switch>
-                
                 <Route path="/stake">
                   <Header />
                   <Stake />
                 </Route>
                 <Route path="/deposit">
                   <Header />
-                  
                   <Vote />
                 </Route>
                 <Route path="/staking">
                 <Header />
-                  
                   <RewardsPools />
                 </Route>
                 
