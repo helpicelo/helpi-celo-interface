@@ -20,7 +20,7 @@ class UnlockModal extends Component {
     return (
       <Dialog open={ modalOpen } onClose={ closeModal } fullWidth={ true } maxWidth={ 'sm' } TransitionComponent={ Transition } fullScreen={ fullScreen }>
         <DialogContent>
-          <Unlock closeModal={ closeModal } />
+          <Unlock closeModal = { closeModal } />
         </DialogContent>
       </Dialog>
     )

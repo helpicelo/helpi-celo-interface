@@ -187,10 +187,15 @@ function MyComponent(props) {
 
   const context = useWeb3React();
   const localContext = store.getStore('web3context');
+  
+  console.log(context)
+
   var localConnector = null;
   if (localContext) {
+    console.log(localContext)
     localConnector = localContext.connector
   }
+
   const {
     connector,
     library,
@@ -200,6 +205,7 @@ function MyComponent(props) {
     active,
     error
   } = context;
+
   var connectorsByName = store.getStore('connectorsByName')
 
   const { closeModal, t } = props
@@ -239,7 +245,7 @@ function MyComponent(props) {
         const activating = currentConnector === activatingConnector;
         const connected = (currentConnector === connector||currentConnector === localConnector);
         const disabled =
-           !!activatingConnector || !!error;
+        !!activatingConnector || !!error;
 
         var url;
         var display = name;
