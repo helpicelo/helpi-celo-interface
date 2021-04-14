@@ -140,11 +140,11 @@ class Lock extends Component {
       account: account,
       yfiToken: null
     }
-
-    this.balancesReturned()
   }
 
   componentWillMount() {
+    this.balancesReturned()
+
     emitter.on(ERROR, this.errorReturned);
     emitter.on(CONFIGURE_RETURNED, this.configureReturned)
     emitter.on(LOCK_RETURNED, this.showHash);
