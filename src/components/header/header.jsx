@@ -172,8 +172,12 @@ class Header extends Component {
           </div>
           <div className={ classes.links }>
             { this.renderLink('lock') }
-            { this.renderLink('staking') }
-            { this.renderLink('roadmap') }
+            {/* { this.renderLink('staking') } */}
+            { this.renderExtLink('lite-paper', 'https://celohelpi.org/Helpi_Litepaper_Final.pdf') }
+            { this.renderExtLink('roadmap','https://celohelpi.org/roadmap.pdf') }
+            { this.renderExtLink('video','https://www.youtube.com/watch?v=jW4j6tj3hDQ') }
+            { this.renderExtLink('demo','https://youtu.be/rGuej-fyDVs') }
+
           </div>
           <div className={ classes.account }>
             { address &&
@@ -201,6 +205,18 @@ class Header extends Component {
 
     return (
       <div className={ (window.location.pathname==='/'+screen || (window.location.pathname==='/stake' && screen==='staking')  || (window.location.pathname==='/propose' && screen==='vote') )?classes.linkActive:classes.link } onClick={ () => { this.nav(screen) } }>
+        <Typography variant={'h4'} className={ `title` }>{ screen }</Typography>
+      </div>
+    )
+  }
+
+  renderExtLink = (screen, url) => {
+    const {
+      classes
+    } = this.props;
+
+    return (
+      <div className={ (window.location.pathname==='/'+screen || (window.location.pathname==='/stake' && screen==='staking')  || (window.location.pathname==='/propose' && screen==='vote') )?classes.linkActive:classes.link } onClick={ () => { window.open(url, "_blank") } }>
         <Typography variant={'h4'} className={ `title` }>{ screen }</Typography>
       </div>
     )

@@ -6,9 +6,10 @@ import {
   Button,
   Card,
   TextField,
-  InputAdornment
+  InputAdornment,
+  Grid
 } from '@material-ui/core';
-
+import LaunchIcon from '@material-ui/icons/Launch';
 import Loader from '../loader'
 import Snackbar from '../snackbar'
 import UnlockModal from '../unlock/unlockModal.jsx'
@@ -125,6 +126,16 @@ const styles = theme => ({
     paddingRight: '20px',
     cursor: 'pointer'
   },
+  buttonContainer: {
+    padding: '0',
+    margin: '0',
+    listStyle: 'none',
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  spaceBetween: { 
+    justifyContent: 'space-between', 
+  }
 })
 
 const emitter = Store.emitter
@@ -248,18 +259,34 @@ class Lock extends Component {
         }
         {
           cHLPAsset !== null &&
-          <div className={classes.lockContainer}>
-            <Typography className={classes.lockTitle} variant={'h3'}>Lock your tokens</Typography>
-            {this.renderAssetInput(CeloAsset, 'lock')}
-            <Button
-              className={classes.lockButton}
-              variant="outlined"
-              color="primary"
-              disabled={loading}
-              onClick={() => { this.onLock(this.state['' + CeloAsset.id + '_' + 'lock']) }}
-            >
-              <Typography variant={'h4'}>Lock tokens</Typography>
-            </Button>
+            <div>
+              <div className={classes.lockContainer}>
+              <Typography className={classes.lockTitle} variant={'h3'}>Lock your tokens</Typography>
+              <Typography variant={'h3'} style={{color: colors.red}}>500% APR</Typography>
+              {this.renderAssetInput(CeloAsset, 'lock')}
+              <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+              >
+                <Button
+                    className={classes.lockButton}
+                    variant="outlined"
+                    color="primary"
+                    disabled={loading}
+                    onClick={() => { this.onLock(this.state['' + CeloAsset.id + '_' + 'lock']) }}
+                  >
+                    <Typography variant={'h4'}>Lock tokens</Typography>
+                  </Button>
+                  <div className={classes.buttonContainer}>
+                    <Typography variant={'h4'}>SmartContract</Typography>
+                    <Button style={{margin: '0', padding: '0', minWidth: '35px'}}>
+                      <LaunchIcon onClick={() => {window.open("https://alfajores-blockscout.celo-testnet.org/address/0x681f97af12c7a8209444c41a4c24de0585fb9206", "_blank")}}/>
+                    </Button>
+                  </div>
+              </Grid>
+            </div>
           </div>
         }
         { snackbarMessage && this.renderSnackbar()}

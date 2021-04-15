@@ -30,7 +30,7 @@ const styles = theme => ({
     width: '100%',
     background: colors.white,
     borderRadius: '50px 50px 0px 0px',
-    border: '1px solid '+colors.borderBlue,
+    border: '1px solid '+colors.red,
     borderBottom: 'none',
     marginTop: '48px',
     flexWrap: 'wrap',
@@ -41,7 +41,7 @@ const styles = theme => ({
   heading: {
     marginBottom: '12px',
     paddingBottom: '9px',
-    borderBottom: "3px solid "+colors.borderBlue,
+    borderBottom: "3px solid "+colors.red,
     width: 'fit-content',
     marginLeft: '30px'
   },

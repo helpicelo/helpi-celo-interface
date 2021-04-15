@@ -11,6 +11,7 @@ import { colors } from '../../theme'
 import LockIcon from '@material-ui/icons/Lock';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 import ExploreIcon from '@material-ui/icons/Explore';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 const styles = theme => ({
   root: {
@@ -136,11 +137,15 @@ class Home extends Component {
           <LockIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>Lock</Typography>
         </Card>
-        <Card className={ `${classes.card} ${classes.stake}` } onClick={ () => { this.nav(location.pathname+'staking') } }>
+        <Card className={ `${classes.card} ${classes.stake}` } onClick={ () => { this.nav(location.pathname+'lock') } }>
           <FilterHdrIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>Stake</Typography>
         </Card>
-        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { this.nav(location.pathname+'deposit') } }>
+        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { window.open("https://celohelpi.org/Helpi_Litepaper_Final.pdf", "_blank") } }>
+          <LibraryBooksIcon className={ `${classes.icon} icon` } />
+          <Typography variant={'h3'} className={ `${classes.title} title` }>Lite Paper</Typography>
+        </Card>
+        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { window.open("https://celohelpi.org/roadmap.pdf", "_blank") } }>
           <ExploreIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>RoadMap</Typography>
         </Card>
