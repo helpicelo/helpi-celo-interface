@@ -134,17 +134,29 @@ class Lock extends Component {
   constructor(props) {
     super()
 
-    const account = store.getStore('account')
-
     this.state = {
       loading: false,
-      account: account,
-      cHLPToken: null
+      account: null,
+      cHLPAsset: null,
+      CeloAsset: null,
+      kit: null
     }
+
+
   }
 
   componentWillMount() {
     this.balancesReturned()
+    store.configure()
+    const account = store.getStore('account')
+    const kit = store.getStore('Web3Kit')
+
+    console.log(kit)
+
+    this.setState({
+      account,
+      kit
+    })
 
     emitter.on(ERROR, this.errorReturned);
     emitter.on(CONFIGURE_RETURNED, this.configureReturned)
@@ -164,20 +176,28 @@ class Lock extends Component {
   };
 
   balancesReturned = () => {
-    
-    const rewardPools = store.getStore('rewardPools')
-    console.log(rewardPools)
-    const governancePool = rewardPools.filter((pool) => {
-      return pool.id === 'GovernanceV2'
-    })
 
-    if(governancePool.length > 0 && governancePool[0].tokens) {
-      const cHLPToken = governancePool[0].tokens[0]
-      this.state = {
-        ...this.state,
-        cHLPToken: cHLPToken
-      }
+    const CeloAsset = store.getStore('CeloAsset')
+    const cHLPAsset = store.getStore('cHLPAsset')
+
+    this.state = {
+      ...this.state,
+      CeloAsset: CeloAsset,
+      cHLPAsset: cHLPAsset,
     }
+    
+    // const rewardPools = store.getStore('rewardPools')
+    // const governancePool = rewardPools.filter((pool) => {
+    //   return pool.id === 'GovernanceV2'
+    // })
+
+    // if(governancePool.length > 0 && governancePool[0].tokens) {
+    //   const cHLPToken = governancePool[0].tokens[0]
+    //   this.state = {
+    //     ...this.state,
+    //     cHLPAsset: cHLPAsset
+    //   }
+    // }
 
   }
 
@@ -205,11 +225,12 @@ class Lock extends Component {
       loading,
       modalOpen,
       snackbarMessage,
-      cHLPToken
+      CeloAsset,
+      cHLPAsset
     } = this.state
 
     var address = null;
-    if (account.address) {
+    if (account && account.address ) {
       address = account.address.substring(0,6)+'...'+account.address.substring(account.address.length-4,account.address.length)
     }
 
@@ -224,16 +245,16 @@ class Lock extends Component {
           </Card>
         </div>
         {
-          cHLPToken === null &&
+          cHLPAsset === null &&
           <div className={ classes.lockContainer }>
             <Typography className={ classes.loadingTitle } variant={ 'h3'}>Loading your tokens ...</Typography>
           </div>
         }
         {
-          cHLPToken !== null &&
+          cHLPAsset !== null &&
           <div className={ classes.lockContainer }>
-            <Typography className={ classes.lockTitle } variant={ 'h3'}>Lock your tokens</Typography>
-            { this.renderAssetInput(cHLPToken, 'lock') }
+            <Typography className={ classes.lockTitle } variant={'h3'}>Lock your tokens</Typography>
+            { this.renderAssetInput(CeloAsset, 'lock') }
             <Button
               className={ classes.lockButton }
               variant="outlined"
@@ -258,8 +279,11 @@ class Lock extends Component {
     } = this.props
 
     const {
-      loading
+      loading,
+      kit
     } = this.state
+
+    console.log(kit)
 
     const amount = this.state[asset.id + '_' + type]
     const amountError = this.state[asset.id + '_' + type + '_error']
@@ -267,7 +291,11 @@ class Lock extends Component {
     return (
       <div className={ classes.valContainer } key={asset.id + '_' + type}>
         <div className={ classes.balances }>
-          { type === 'lock' && <Typography variant='h4' onClick={ () => { this.setAmount(asset.id, type, (asset ? asset.balance : 0)) } } className={ classes.value } noWrap>{ 'Balance: '+ ( asset && asset.balance ? (Math.floor(asset.balance*10000)/10000).toFixed(4) : '0.0000') } { asset ? asset.symbol : '' }</Typography> }
+          { type === 'lock' && <Typography variant='h4' 
+          onClick={ () => { this.setAmount(asset.id, type, (asset ? asset.balance : 0)) } } 
+          className={ classes.value } 
+          noWrap>{ 'Balance: '+ ( asset && asset.balance ? (Math.floor(asset.balance*10000)/10000).toFixed(4) : '0.0000') } 
+          { asset ? asset.symbol : '' }</Typography> }
         </div>
         <div>
           <TextField

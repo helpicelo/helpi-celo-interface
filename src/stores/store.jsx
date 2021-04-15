@@ -41,6 +41,7 @@ import {
   GET_VOTE_STATUS_RETURNED
 } from '../constants';
 import Web3 from 'web3';
+import {newKitFromWeb3} from '@celo/contractkit'
 
 import {
   injected,
@@ -74,6 +75,7 @@ class Store {
       votingStatus: false,
       governanceContractVersion: 2,
       currentBlock: 0,
+      Web3Kit: {},
       universalGasPrice: '70',
       account: {},
       web3: null,
@@ -101,18 +103,27 @@ class Store {
       ],
       proposals: [
       ],
-      claimableAsset: {
-        id: 'cHLP',
-        name: 'Celo Helpi',
+      CeloAsset: {
+        id: 'CELO',
+        name: 'CELO',
         address: config.cHLPAddress,
-        abi: config.cHLPABI,
-        symbol: 'cHLP',
+        symbol: 'CELO',
         balance: 0,
         decimals: 18,
-        rewardAddress: '0xfc1e690f61efd961294b3e1ce3313fbd8aa4f85d',
-        rewardSymbol: 'aDAI',
-        rewardDecimals: 18,
         claimableBalance: 0
+      },
+      cHLPAsset: {
+        id: 'cHLP',
+        name: 'Celo Helpi',
+        address: '0x8bCd19C5677420d0dFc769fb5097415294C97E61',
+        abi: config.cHLPABI,
+        symbol: 'cHLP',
+        balance: '0',
+        decimals: '18',
+        // rewardAddress: '0xfc1e690f61efd961294b3e1ce3313fbd8aa4f85d',
+        // rewardSymbol: 'aDAI',
+        // rewardDecimals: 18,
+        // claimableBalance: 0
       },
       rewardPools: [
         {
@@ -216,9 +227,9 @@ class Store {
           tokens: [
             {
               id: 'celo',
-              address: config.yfiAddress,
+              address: config.CELO,
               symbol: 'CELO',
-              abi: config.yfiABI,
+              // abi: config.yfiABI,
               decimals: 18,
               rewardsAddress: config.governanceV2Address,
               rewardsABI: config.governanceV2ABI,
@@ -308,9 +319,9 @@ class Store {
 
   configure = async () => {
     const web3 = new Web3(store.getStore('web3context').library.provider);
-    const currentBlock = await web3.eth.getBlockNumber()
 
-    store.setStore({ currentBlock: currentBlock })
+    const kit = newKitFromWeb3(web3)
+    store.setStore({ Web3Kit: kit })
 
     window.setTimeout(() => {
       emitter.emit(CONFIGURE_RETURNED)
