@@ -138,7 +138,7 @@ class Lock extends Component {
     this.state = {
       loading: false,
       account: account,
-      yfiToken: null
+      cHLPToken: null
     }
 
     this.balancesReturned()
@@ -163,15 +163,21 @@ class Lock extends Component {
   };
 
   balancesReturned = () => {
+    
     const rewardPools = store.getStore('rewardPools')
+    console.log(rewardPools)
     const governancePool = rewardPools.filter((pool) => {
       return pool.id === 'GovernanceV2'
     })
 
     if(governancePool.length > 0 && governancePool[0].tokens) {
-      const yfiToken = governancePool[0].tokens[0]
-      this.setState({ yfiToken: yfiToken })
+      const cHLPToken = governancePool[0].tokens[0]
+      this.state = {
+        ...this.state,
+        cHLPToken: cHLPToken
+      }
     }
+
   }
 
   showHash = (txHash) => {
@@ -198,7 +204,7 @@ class Lock extends Component {
       loading,
       modalOpen,
       snackbarMessage,
-      yfiToken
+      cHLPToken
     } = this.state
 
     var address = null;
@@ -217,16 +223,16 @@ class Lock extends Component {
           </Card>
         </div>
         {
-          yfiToken === null &&
+          cHLPToken === null &&
           <div className={ classes.lockContainer }>
             <Typography className={ classes.loadingTitle } variant={ 'h3'}>Loading your tokens ...</Typography>
           </div>
         }
         {
-          yfiToken !== null &&
+          cHLPToken !== null &&
           <div className={ classes.lockContainer }>
             <Typography className={ classes.lockTitle } variant={ 'h3'}>Lock your tokens</Typography>
-            { this.renderAssetInput(yfiToken, 'lock') }
+            { this.renderAssetInput(cHLPToken, 'lock') }
             <Button
               className={ classes.lockButton }
               variant="outlined"

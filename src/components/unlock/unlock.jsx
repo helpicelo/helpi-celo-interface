@@ -187,8 +187,6 @@ function MyComponent(props) {
 
   const context = useWeb3React();
   const localContext = store.getStore('web3context');
-  
-  console.log(context)
 
   var localConnector = null;
   if (localContext) {

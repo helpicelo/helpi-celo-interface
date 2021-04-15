@@ -102,11 +102,11 @@ class Store {
       proposals: [
       ],
       claimableAsset: {
-        id: 'yfi',
-        name: 'yearn.finance',
-        address: config.yfiAddress,
-        abi: config.yfiABI,
-        symbol: 'YFI',
+        id: 'cHLP',
+        name: 'Celo Helpi',
+        address: config.cHLPAddress,
+        abi: config.cHLPABI,
+        symbol: 'cHLP',
         balance: 0,
         decimals: 18,
         rewardAddress: '0xfc1e690f61efd961294b3e1ce3313fbd8aa4f85d',
@@ -215,9 +215,9 @@ class Store {
           depositsEnabled: true,
           tokens: [
             {
-              id: 'yfi',
+              id: 'celo',
               address: config.yfiAddress,
-              symbol: 'YFI',
+              symbol: 'CELO',
               abi: config.yfiABI,
               decimals: 18,
               rewardsAddress: config.governanceV2Address,
@@ -326,45 +326,45 @@ class Store {
     const currentBlock = await web3.eth.getBlockNumber()
     store.setStore({ currentBlock: currentBlock })
 
-    async.map(pools, (pool, callback) => {
+    // async.map(pools, (pool, callback) => {
 
-      async.map(pool.tokens, (token, callbackInner) => {
+    //   async.map(pool.tokens, (token, callbackInner) => {
 
-        async.parallel([
-          (callbackInnerInner) => { this._getERC20Balance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getstakedBalance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getRewardsAvailable(web3, token, account, callbackInnerInner) }
-        ], (err, data) => {
-          if(err) {
-            console.log(err)
-            return callbackInner(err)
-          }
+    //     async.parallel([
+    //       (callbackInnerInner) => { this._getERC20Balance(web3, token, account, callbackInnerInner) },
+    //       (callbackInnerInner) => { this._getstakedBalance(web3, token, account, callbackInnerInner) },
+    //       (callbackInnerInner) => { this._getRewardsAvailable(web3, token, account, callbackInnerInner) }
+    //     ], (err, data) => {
+    //       if(err) {
+    //         console.log(err)
+    //         return callbackInner(err)
+    //       }
 
-          token.balance = data[0]
-          token.stakedBalance = data[1]
-          token.rewardsAvailable = data[2]
+    //       token.balance = data[0]
+    //       token.stakedBalance = data[1]
+    //       token.rewardsAvailable = data[2]
 
-          callbackInner(null, token)
-        })
-      }, (err, tokensData) => {
-        if(err) {
-          console.log(err)
-          return callback(err)
-        }
+    //       callbackInner(null, token)
+    //     })
+    //   }, (err, tokensData) => {
+    //     if(err) {
+    //       console.log(err)
+    //       return callback(err)
+    //     }
 
-        pool.tokens = tokensData
-        callback(null, pool)
-      })
+    //     pool.tokens = tokensData
+    //     callback(null, pool)
+    //   })
 
-    }, (err, poolData) => {
-      if(err) {
-        console.log(err)
-        return emitter.emit(ERROR, err)
-      }
-      store.setStore({rewardPools: poolData})
-      emitter.emit(GET_BALANCES_PERPETUAL_RETURNED)
-      emitter.emit(GET_BALANCES_RETURNED)
-    })
+    // }, (err, poolData) => {
+    //   if(err) {
+    //     console.log(err)
+    //     return emitter.emit(ERROR, err)
+    //   }
+    //   store.setStore({rewardPools: poolData})
+    //   emitter.emit(GET_BALANCES_PERPETUAL_RETURNED)
+    //   emitter.emit(GET_BALANCES_RETURNED)
+    // })
   }
 
   getBalances = () => {

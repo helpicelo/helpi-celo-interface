@@ -62,7 +62,7 @@ class App extends Component {
         .then((a) => {
           store.setStore({ account: { address: a.account }, web3context: { library: { provider: a.provider } } })
           emitter.emit(CONNECTION_CONNECTED)
-          console.log(a)
+          console.log(a.provider)
         })
         .catch((e) => {
           console.log(e)
