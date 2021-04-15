@@ -412,7 +412,7 @@ class Vote extends Component {
     const now = store.getStore('currentBlock')
 
     const filteredProposals = proposals.filter((proposal) => {
-      return proposal.proposer != '0x0000000000000000000000000000000000000000'
+      return proposal.proposer !== '0x0000000000000000000000000000000000000000'
     }).filter((proposal) => {
       return (value === 0 ? proposal.end < now : proposal.end > now)
     })

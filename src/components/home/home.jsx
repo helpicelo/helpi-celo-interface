@@ -141,11 +141,11 @@ class Home extends Component {
           <FilterHdrIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>Stake</Typography>
         </Card>
-        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { window.open("https://celohelpi.org/Helpi_Litepaper_Final.pdf", "_blank") } }>
+        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { window.open("https://celohelpi.org/Helpi_Litepaper_Final.pdf", "_blank noopener noreferrer") } }>
           <LibraryBooksIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>Lite Paper</Typography>
         </Card>
-        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { window.open("https://celohelpi.org/roadmap.pdf", "_blank") } }>
+        <Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { window.open("https://celohelpi.org/roadmap.pdf", "_blank", "_blank noopener noreferrer") } }>
           <ExploreIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>RoadMap</Typography>
         </Card>
