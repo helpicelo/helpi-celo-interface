@@ -319,7 +319,7 @@ function MyComponent(props) {
           </div>
         )
       }) }
-
+{/* 
       <div style={{ width: '252px', margin: '12px 0px'  }}>
         <Button style={ {
             padding: '12px',
@@ -342,7 +342,7 @@ function MyComponent(props) {
             { t('Unlock.Deactivate') }
           </Typography>
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 
