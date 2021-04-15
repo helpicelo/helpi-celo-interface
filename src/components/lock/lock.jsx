@@ -36,7 +36,7 @@ const styles = theme => ({
     marginTop: '40px'
   },
   intro: {
-    width: '100%',
+    width: '50%',
     position: 'relative',
     display: 'flex',
     justifyContent: 'space-between',
@@ -47,7 +47,8 @@ const styles = theme => ({
     border: '1px solid rgb(174, 174, 174)',
     borderRadius: '0.75rem',
     marginBottom: '24px',
-    background: colors.white
+    background: colors.red,
+    color: colors.white
   },
   addressContainer: {
     display: 'flex',
@@ -60,7 +61,7 @@ const styles = theme => ({
     cursor: 'pointer',
     padding: '28px 30px',
     borderRadius: '50px',
-    border: '1px solid '+colors.borderBlue,
+    border: '1px solid '+colors.borderRed,
     alignItems: 'center',
     maxWidth: '500px',
     [theme.breakpoints.up('md')]: {
@@ -80,7 +81,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
     padding: '28px 30px',
     borderRadius: '50px',
-    border: '1px solid '+colors.borderBlue,
+    border: '1px solid '+colors.red,
     margin: '20px',
     background: colors.white,
   },
@@ -210,7 +211,7 @@ class Lock extends Component {
       <div className={ classes.root }>
         <Typography variant={'h5'} className={ classes.disaclaimer }>This project is in beta. Use at your own risk.</Typography>
         <div className={ classes.intro }>
-          <Card className={ classes.addressContainer } onClick={this.overlayClicked}>
+          <Card className={ classes.lockContainer } onClick={this.overlayClicked}>
             <Typography variant={ 'h3'} className={ classes.walletTitle } noWrap>Wallet</Typography>
             <Typography variant={ 'h4'} className={ classes.walletAddress } noWrap>{ address }</Typography>
             <div style={{ background: '#DC6BE5', opacity: '1', borderRadius: '10px', width: '10px', height: '10px', marginRight: '3px', marginTop:'3px', marginLeft:'6px' }}></div>
@@ -230,7 +231,7 @@ class Lock extends Component {
             <Button
               className={ classes.lockButton }
               variant="outlined"
-              color="secondary"
+              color="primary"
               disabled={ loading }
               onClick={ () => { this.onLock() } }
             >

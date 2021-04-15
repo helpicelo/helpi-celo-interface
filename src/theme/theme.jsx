@@ -256,10 +256,10 @@ const iswapTheme =  {
           color: '#555',
         },
         '&:hover': {
-          backgroundColor: "rgba(47,128,237, 0.2)",
+          backgroundColor: "#ed4337",
         },
         "&$selected": {
-          backgroundColor: '#2f80ed',
+          backgroundColor: '#ed4337',
           '& > span > h4': {
             color: '#fff',
           },
@@ -294,7 +294,7 @@ const iswapTheme =  {
   },
   palette: {
     primary: {
-      main: colors.blue
+      main: colors.red
     },
     secondary: {
       main: colors.topaz
