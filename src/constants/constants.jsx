@@ -61,3 +61,6 @@ export const GET_VOTE_STATUS_RETURNED = 'GET_VOTE_STATUS_RETURNED'
 
 export const LOCK = 'LOCK'
 export const LOCK_RETURNED = 'LOCK_RETURNED'
+
+export const UNLOCK = 'LOCK'
+export const UNLOCK_RETURNED = 'LOCK_RETURNED'

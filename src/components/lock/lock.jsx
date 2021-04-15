@@ -21,7 +21,9 @@ import {
   CONFIGURE_RETURNED,
   LOCK,
   LOCK_RETURNED,
-  GET_BALANCES_RETURNED
+  GET_BALANCES_RETURNED,
+  GET_BALANCES,
+  CONFIGURE,
 } from '../../constants'
 
 const styles = theme => ({
@@ -57,11 +59,11 @@ const styles = theme => ({
     flex: 1,
     whiteSpace: 'nowrap',
     fontSize: '0.83rem',
-    textOverflow:'ellipsis',
+    textOverflow: 'ellipsis',
     cursor: 'pointer',
     padding: '28px 30px',
     borderRadius: '50px',
-    border: '1px solid '+colors.borderRed,
+    border: '1px solid ' + colors.borderRed,
     alignItems: 'center',
     maxWidth: '500px',
     [theme.breakpoints.up('md')]: {
@@ -81,7 +83,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
     padding: '28px 30px',
     borderRadius: '50px',
-    border: '1px solid '+colors.red,
+    border: '1px solid ' + colors.red,
     margin: '20px',
     background: colors.white,
   },
@@ -142,22 +144,11 @@ class Lock extends Component {
       kit: null
     }
 
-
+    dispatcher.dispatch({ type: CONFIGURE, content: {} })
+    dispatcher.dispatch({ type: GET_BALANCES, content: {} })
   }
 
   componentWillMount() {
-    this.balancesReturned()
-    store.configure()
-    const account = store.getStore('account')
-    const kit = store.getStore('Web3Kit')
-
-    console.log(kit)
-
-    this.setState({
-      account,
-      kit
-    })
-
     emitter.on(ERROR, this.errorReturned);
     emitter.on(CONFIGURE_RETURNED, this.configureReturned)
     emitter.on(LOCK_RETURNED, this.showHash);
@@ -180,12 +171,14 @@ class Lock extends Component {
     const CeloAsset = store.getStore('CeloAsset')
     const cHLPAsset = store.getStore('cHLPAsset')
 
-    this.state = {
+    console.log(CeloAsset)
+
+    this.setState({
       ...this.state,
       CeloAsset: CeloAsset,
       cHLPAsset: cHLPAsset,
-    }
-    
+    })
+
     // const rewardPools = store.getStore('rewardPools')
     // const governancePool = rewardPools.filter((pool) => {
     //   return pool.id === 'GovernanceV2'
@@ -202,7 +195,9 @@ class Lock extends Component {
   }
 
   showHash = (txHash) => {
+    console.log(txHash)
     this.showSnackbar(txHash, 'Hash')
+    dispatcher.dispatch({ type: GET_BALANCES, content: {} })
   };
 
   showSnackbar = (message, type) => {
@@ -215,6 +210,7 @@ class Lock extends Component {
   }
 
   configureReturned = () => {
+    console.log(this.state.CeloAsset)
     this.setState({ loading: false })
   }
 
@@ -226,95 +222,98 @@ class Lock extends Component {
       modalOpen,
       snackbarMessage,
       CeloAsset,
-      cHLPAsset
+      cHLPAsset,
     } = this.state
 
-    var address = null;
-    if (account && account.address ) {
-      address = account.address.substring(0,6)+'...'+account.address.substring(account.address.length-4,account.address.length)
+    var address = null
+    if (account && account.address) {
+      address = account.address.substring(0, 6) + '...' + account.address.substring(account.address.length - 4, account.address.length)
     }
 
     return (
-      <div className={ classes.root }>
-        <Typography variant={'h5'} className={ classes.disaclaimer }>This project is in beta. Use at your own risk.</Typography>
-        <div className={ classes.intro }>
-          <Card className={ classes.lockContainer } onClick={this.overlayClicked}>
-            <Typography variant={ 'h3'} className={ classes.walletTitle } noWrap>Wallet</Typography>
-            <Typography variant={ 'h4'} className={ classes.walletAddress } noWrap>{ address }</Typography>
-            <div style={{ background: '#DC6BE5', opacity: '1', borderRadius: '10px', width: '10px', height: '10px', marginRight: '3px', marginTop:'3px', marginLeft:'6px' }}></div>
+      <div className={classes.root}>
+        <Typography variant={'h5'} className={classes.disaclaimer}>This project is in beta. Use at your own risk.</Typography>
+        <div className={classes.intro}>
+          <Card className={classes.lockContainer} onClick={this.overlayClicked}>
+            <Typography variant={'h3'} className={classes.walletTitle} noWrap>Wallet</Typography>
+            <Typography variant={'h4'} className={classes.walletAddress} noWrap>{address}</Typography>
+            <div style={{ background: '#DC6BE5', opacity: '1', borderRadius: '10px', width: '10px', height: '10px', marginRight: '3px', marginTop: '3px', marginLeft: '6px' }}></div>
           </Card>
         </div>
         {
           cHLPAsset === null &&
-          <div className={ classes.lockContainer }>
-            <Typography className={ classes.loadingTitle } variant={ 'h3'}>Loading your tokens ...</Typography>
+          <div className={classes.lockContainer}>
+            <Typography className={classes.loadingTitle} variant={'h3'}>Loading your tokens ...</Typography>
           </div>
         }
         {
           cHLPAsset !== null &&
-          <div className={ classes.lockContainer }>
-            <Typography className={ classes.lockTitle } variant={'h3'}>Lock your tokens</Typography>
-            { this.renderAssetInput(CeloAsset, 'lock') }
+          <div className={classes.lockContainer}>
+            <Typography className={classes.lockTitle} variant={'h3'}>Lock your tokens</Typography>
+            {this.renderAssetInput(CeloAsset, 'lock')}
             <Button
-              className={ classes.lockButton }
+              className={classes.lockButton}
               variant="outlined"
               color="primary"
-              disabled={ loading }
-              onClick={ () => { this.onLock() } }
+              disabled={loading}
+              onClick={() => { this.onLock(this.state['' + CeloAsset.id + '_' + 'lock']) }}
             >
-              <Typography variant={ 'h4'}>Lock tokens</Typography>
+              <Typography variant={'h4'}>Lock tokens</Typography>
             </Button>
           </div>
         }
-        { snackbarMessage && this.renderSnackbar() }
-        { loading && <Loader /> }
-        { modalOpen && this.renderModal() }
+        { snackbarMessage && this.renderSnackbar()}
+        { loading && <Loader />}
+        { modalOpen && this.renderModal()}
       </div>
     )
   }
 
+  onLock = (amount) => {
+    console.log('amount',amount)
+    dispatcher.dispatch({ type: LOCK, content: {amount} })
+  }
+
   renderAssetInput = (asset, type) => {
+    if (!asset) return null
     const {
       classes
     } = this.props
 
     const {
       loading,
-      kit
     } = this.state
-
-    console.log(kit)
 
     const amount = this.state[asset.id + '_' + type]
     const amountError = this.state[asset.id + '_' + type + '_error']
 
     return (
-      <div className={ classes.valContainer } key={asset.id + '_' + type}>
-        <div className={ classes.balances }>
-          { type === 'lock' && <Typography variant='h4' 
-          onClick={ () => { this.setAmount(asset.id, type, (asset ? asset.balance : 0)) } } 
-          className={ classes.value } 
-          noWrap>{ 'Balance: '+ ( asset && asset.balance ? (Math.floor(asset.balance*10000)/10000).toFixed(4) : '0.0000') } 
-          { asset ? asset.symbol : '' }</Typography> }
+      <div className={classes.valContainer} key={asset.id + '_' + type}>
+        <div className={classes.balances}>
+          {type === 'lock' && <Typography variant='h4'
+            onClick={() => { this.setAmount(asset.id, type, (asset ? asset.balance : 0)) }}
+            className={classes.value}
+            noWrap>{'Balance: ' + (asset && asset.balance ? (Math.floor(asset.balance * 10000) / 10000).toFixed(4) : '0.0000')}
+            {asset ? asset.symbol : ''}</Typography>}
         </div>
         <div>
           <TextField
             fullWidth
-            disabled={ loading }
-            className={ classes.actionInput }
-            id={ '' + asset.id + '_' + type }
-            value={ amount }
-            error={ amountError }
-            onChange={ this.onChange }
+            disabled={loading}
+            className={classes.actionInput}
+            id={'' + asset.id + '_' + type}
+            value={amount}
+            error={amountError}
+            onChange={this.onChange}
             placeholder="0.00"
             variant="outlined"
             InputProps={{
-              endAdornment: <InputAdornment position="end" className={ classes.inputAdornment }><Typography variant='h3' className={ '' }>{ asset.symbol }</Typography></InputAdornment>,
-              startAdornment: <InputAdornment position="end" className={ classes.inputAdornment }>
-                <div className={ classes.assetIcon }>
+              endAdornment: <InputAdornment position="end" className={classes.inputAdornment}><Typography variant='h3' className={''}>{asset.symbol}</Typography></InputAdornment>,
+              startAdornment: <InputAdornment position="end" className={classes.inputAdornment}>
+                <div className={classes.assetIcon}>
                   <img
                     alt=""
-                    src={ require('../../assets/'+asset.symbol+'-logo.png') }
+                    src={require('../../assets/' + asset.symbol + '-logo.png')}
                     height="30px"
                   />
                 </div>
@@ -338,7 +337,7 @@ class Lock extends Component {
 
   renderModal = () => {
     return (
-      <UnlockModal closeModal={ this.closeModal } modalOpen={ this.state.modalOpen } />
+      <UnlockModal closeModal={this.closeModal} modalOpen={this.state.modalOpen} />
     )
   }
 
@@ -347,7 +346,7 @@ class Lock extends Component {
       snackbarType,
       snackbarMessage
     } = this.state
-    return <Snackbar type={ snackbarType } message={ snackbarMessage } open={true}/>
+    return <Snackbar type={snackbarType} message={snackbarMessage} open={true} />
   };
 
   overlayClicked = () => {

@@ -38,10 +38,14 @@ import {
   REGISTER_VOTE,
   REGISTER_VOTE_RETURNED,
   GET_VOTE_STATUS,
-  GET_VOTE_STATUS_RETURNED
+  GET_VOTE_STATUS_RETURNED,
+  LOCK,
+  LOCK_RETURNED,
+  UNLOCK,
+  UNLOCK_RETURNED,
 } from '../constants';
 import Web3 from 'web3';
-import {newKitFromWeb3} from '@celo/contractkit'
+import { newKitFromWeb3 } from '@celo/contractkit'
 
 import {
   injected,
@@ -103,121 +107,101 @@ class Store {
       ],
       proposals: [
       ],
-      CeloAsset: {
-        id: 'CELO',
-        name: 'CELO',
-        address: config.cHLPAddress,
-        symbol: 'CELO',
-        balance: 0,
-        decimals: 18,
-        claimableBalance: 0
-      },
-      cHLPAsset: {
-        id: 'cHLP',
-        name: 'Celo Helpi',
-        address: '0x8bCd19C5677420d0dFc769fb5097415294C97E61',
-        abi: config.cHLPABI,
-        symbol: 'cHLP',
-        balance: '0',
-        decimals: '18',
-        // rewardAddress: '0xfc1e690f61efd961294b3e1ce3313fbd8aa4f85d',
-        // rewardSymbol: 'aDAI',
-        // rewardDecimals: 18,
-        // claimableBalance: 0
-      },
+      CeloAsset: null,
+      cHLPAsset: null,
       rewardPools: [
-        {
-          id: 'yearn',
-          name: 'yearn',
-          website: 'curve.fi/y',
-          link: 'https://curve.fi/y',
-          depositsEnabled: false,
-          tokens: [
-            {
-              id: 'ycurvefi',
-              address: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
-              symbol: 'curve.fi',
-              abi: config.erc20ABI,
-              decimals: 18,
-              rewardsAddress: config.yCurveFiRewardsAddress,
-              rewardsABI: config.yCurveFiRewardsABI,
-              rewardsSymbol: 'YFI',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        },
-        {
-          id: 'Balancer',
-          name: 'Balancer',
-          website: 'pools.balancer.exchange',
-          link: 'https://pools.balancer.exchange/#/pool/0x60626db611a9957C1ae4Ac5b7eDE69e24A3B76c5',
-          depositsEnabled: false,
-          tokens: [
-            {
-              id: 'bpt',
-              address: '0x60626db611a9957C1ae4Ac5b7eDE69e24A3B76c5',
-              symbol: 'BPT',
-              abi: config.erc20ABI,
-              decimals: 18,
-              rewardsAddress: config.balancerRewardsAddress,
-              rewardsABI: config.balancerRewardsABI,
-              rewardsSymbol: 'YFI',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        },
-        {
-          id: 'Governance',
-          name: 'Governance',
-          website: 'pools.balancer.exchange',
-          link: 'https://pools.balancer.exchange/#/pool/0x95c4b6c7cff608c0ca048df8b81a484aa377172b',
-          depositsEnabled: false,
-          tokens: [
-            {
-              id: 'bpt',
-              address: '0x95c4b6c7cff608c0ca048df8b81a484aa377172b',
-              symbol: 'BPT',
-              abi: config.bpoolABI,
-              decimals: 18,
-              rewardsAddress: config.governanceAddress,
-              rewardsABI: config.governanceABI,
-              rewardsSymbol: 'YFI',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        },
-        {
-          id: 'FeeRewards',
-          name: 'Fee Rewards',
-          website: 'ygov.finance',
-          link: 'https://ygov.finance/',
-          depositsEnabled: false,
-          tokens: [
-            {
-              id: 'yfi',
-              address: config.yfiAddress,
-              symbol: 'YFI',
-              abi: config.yfiABI,
-              decimals: 18,
-              rewardsAddress: config.feeRewardsAddress,
-              rewardsABI: config.feeRewardsABI,
-              rewardsSymbol: '$',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        },
+        // {
+        //   id: 'yearn',
+        //   name: 'yearn',
+        //   website: 'curve.fi/y',
+        //   link: 'https://curve.fi/y',
+        //   depositsEnabled: false,
+        //   tokens: [
+        //     {
+        //       id: 'ycurvefi',
+        //       address: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
+        //       symbol: 'curve.fi',
+        //       abi: config.erc20ABI,
+        //       decimals: 18,
+        //       rewardsAddress: config.yCurveFiRewardsAddress,
+        //       rewardsABI: config.yCurveFiRewardsABI,
+        //       rewardsSymbol: 'YFI',
+        //       decimals: 18,
+        //       balance: 0,
+        //       stakedBalance: 0,
+        //       rewardsAvailable: 0
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: 'Balancer',
+        //   name: 'Balancer',
+        //   website: 'pools.balancer.exchange',
+        //   link: 'https://pools.balancer.exchange/#/pool/0x60626db611a9957C1ae4Ac5b7eDE69e24A3B76c5',
+        //   depositsEnabled: false,
+        //   tokens: [
+        //     {
+        //       id: 'bpt',
+        //       address: '0x60626db611a9957C1ae4Ac5b7eDE69e24A3B76c5',
+        //       symbol: 'BPT',
+        //       abi: config.erc20ABI,
+        //       decimals: 18,
+        //       rewardsAddress: config.balancerRewardsAddress,
+        //       rewardsABI: config.balancerRewardsABI,
+        //       rewardsSymbol: 'YFI',
+        //       decimals: 18,
+        //       balance: 0,
+        //       stakedBalance: 0,
+        //       rewardsAvailable: 0
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: 'Governance',
+        //   name: 'Governance',
+        //   website: 'pools.balancer.exchange',
+        //   link: 'https://pools.balancer.exchange/#/pool/0x95c4b6c7cff608c0ca048df8b81a484aa377172b',
+        //   depositsEnabled: false,
+        //   tokens: [
+        //     {
+        //       id: 'bpt',
+        //       address: '0x95c4b6c7cff608c0ca048df8b81a484aa377172b',
+        //       symbol: 'BPT',
+        //       abi: config.bpoolABI,
+        //       decimals: 18,
+        //       rewardsAddress: config.governanceAddress,
+        //       rewardsABI: config.governanceABI,
+        //       rewardsSymbol: 'YFI',
+        //       decimals: 18,
+        //       balance: 0,
+        //       stakedBalance: 0,
+        //       rewardsAvailable: 0
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: 'FeeRewards',
+        //   name: 'Fee Rewards',
+        //   website: 'ygov.finance',
+        //   link: 'https://ygov.finance/',
+        //   depositsEnabled: false,
+        //   tokens: [
+        //     {
+        //       id: 'yfi',
+        //       address: config.yfiAddress,
+        //       symbol: 'YFI',
+        //       abi: config.yfiABI,
+        //       decimals: 18,
+        //       rewardsAddress: config.feeRewardsAddress,
+        //       rewardsABI: config.feeRewardsABI,
+        //       rewardsSymbol: '$',
+        //       decimals: 18,
+        //       balance: 0,
+        //       stakedBalance: 0,
+        //       rewardsAvailable: 0
+        //     }
+        //   ]
+        // },
         {
           id: 'GovernanceV2',
           name: 'Governance V2',
@@ -226,20 +210,28 @@ class Store {
           depositsEnabled: true,
           tokens: [
             {
+              id: 'helpi',
+              symbol: 'cHLP',
+              // abi: config.yfiABI,
+              decimals: 18,
+              address: config.cHLPAddress,
+              ABI: config.cHLPABI,
+              balance: 0,
+              stakedBalance: 0,
+              rewardsAvailable: 0
+            },
+            {
               id: 'celo',
-              address: config.CELO,
               symbol: 'CELO',
               // abi: config.yfiABI,
               decimals: 18,
-              rewardsAddress: config.governanceV2Address,
-              rewardsABI: config.governanceV2ABI,
-              rewardsSymbol: '$',
-              decimals: 18,
+              address: config.celoAddress,
+              // ABI: config.cHLPABI,
               balance: 0,
               stakedBalance: 0,
               rewardsAvailable: 0
             }
-          ]
+          ],
         }
       ]
     }
@@ -255,6 +247,12 @@ class Store {
             break;
           case GET_BALANCES_PERPETUAL:
             this.getBalancesPerpetual(payload);
+            break;
+          case LOCK:
+            this.lock(payload);
+            break;
+          case UNLOCK:
+            this.unlock(payload);
             break;
           case STAKE:
             this.stake(payload);
@@ -308,11 +306,11 @@ class Store {
   }
 
   getStore(index) {
-    return(this.store[index]);
+    return (this.store[index]);
   };
 
   setStore(obj) {
-    this.store = {...this.store, ...obj}
+    this.store = { ...this.store, ...obj }
     // console.log(this.store)
     return emitter.emit('StoreUpdated');
   };
@@ -383,43 +381,58 @@ class Store {
     const account = store.getStore('account')
 
     const web3 = new Web3(store.getStore('web3context').library.provider);
+    const kit = newKitFromWeb3(web3)
 
     async.map(pools, (pool, callback) => {
 
-      async.map(pool.tokens, (token, callbackInner) => {
+      const helpiToken = pool.tokens[0]
+      const celoToken = pool.tokens[1]
+      // async.map(pool.tokens, (token, callbackInner) => {
 
-        async.parallel([
-          (callbackInnerInner) => { this._getERC20Balance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getstakedBalance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getRewardsAvailable(web3, token, account, callbackInnerInner) }
-        ], (err, data) => {
-          if(err) {
-            console.log(err)
-            return callbackInner(err)
-          }
+      // console.log(config.ABI)
+      // console.log(token.address)
 
-          token.balance = data[0]
-          token.stakedBalance = data[1]
-          token.rewardsAvailable = data[2]
+      let erc20Contract1 = new kit.web3.eth.Contract(helpiToken.ABI, helpiToken.address)
+      // let erc20Contract3 = new kit.web3.eth.Contract(token.rewardsABI, token.rewardsAddress)
 
-          callbackInner(null, token)
-        })
-      }, (err, tokensData) => {
-        if(err) {
+      // let totalBalance = await kit.getTotalBalance(myAddress)
+      // let contract = new kit.web3.eth.Contract(ABI, address)       // Init a web3.js contract instance
+      // let name = await instance.methods.getName().call()       // Read contract state call
+
+      async.parallel([
+        (callbackInnerInner) => { this._getBalance(erc20Contract1, helpiToken, account, callbackInnerInner) },
+        (callbackInnerInner) => { this._getCelloBalance(kit, account, callbackInnerInner) },
+        // (callbackInnerInner) => { this._getBalance(erc20Contract3, token, account, callbackInnerInner) }
+      ], (err, data) => {
+        if (err) {
           console.log(err)
           return callback(err)
         }
 
-        pool.tokens = tokensData
-        callback(null, pool)
+        helpiToken.balance = data[0]
+        celoToken.balance = data[1]
+        // token.stakedBalance = data[1]
+        // token.rewardsAvailable = data[2]
+
+        callback(null, { cHLPAsset: helpiToken, CeloAsset: celoToken })
       })
+      // }, (err, tokensData) => {
+      //   if (err) {
+      //     console.log(err)
+      //     return callback(err)
+      //   }
+
+      //   pool.tokens = tokensData
+      //   callback(null, pool)
+      // })
 
     }, (err, poolData) => {
-      if(err) {
+      if (err) {
         console.log(err)
         return emitter.emit(ERROR, err)
       }
-      store.setStore({rewardPools: poolData})
+      // console.log(poolData)
+      store.setStore(poolData[0])
       emitter.emit(GET_BALANCES_RETURNED)
     })
   }
@@ -433,15 +446,15 @@ class Store {
 
       const ethAllowance = web3.utils.fromWei(allowance, "ether")
 
-      if(parseFloat(ethAllowance) < parseFloat(amount)) {
+      if (parseFloat(ethAllowance) < parseFloat(amount)) {
         await erc20Contract.methods.approve(contract, web3.utils.toWei("999999999999999", "ether")).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
         callback()
       } else {
         callback()
       }
-    } catch(error) {
+    } catch (error) {
       console.log(error)
-      if(error.message) {
+      if (error.message) {
         return callback(error.message)
       }
       callback(error)
@@ -455,14 +468,14 @@ class Store {
 
     const ethAllowance = web3.utils.fromWei(allowance, "ether")
 
-    if(parseFloat(ethAllowance) < parseFloat(amount)) {
+    if (parseFloat(ethAllowance) < parseFloat(amount)) {
       erc20Contract.methods.approve(contract, web3.utils.toWei("999999999999999", "ether")).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-        .on('transactionHash', function(hash){
+        .on('transactionHash', function (hash) {
           callback()
         })
-        .on('error', function(error) {
+        .on('error', function (error) {
           if (!error.toString().includes("-32601")) {
-            if(error.message) {
+            if (error.message) {
               return callback(error.message)
             }
             callback(error)
@@ -473,40 +486,23 @@ class Store {
     }
   }
 
-  _getERC20Balance = async (web3, asset, account, callback) => {
-    let erc20Contract = new web3.eth.Contract(config.erc20ABI, asset.address)
+
+  _getBalance = async (erc20Contract, asset, account, callback) => {
 
     try {
       var balance = await erc20Contract.methods.balanceOf(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
+      balance = parseFloat(balance) / 10 ** asset.decimals
       callback(null, parseFloat(balance))
-    } catch(ex) {
+    } catch (ex) {
       return callback(ex)
     }
   }
 
-  _getstakedBalance = async (web3, asset, account, callback) => {
-    let erc20Contract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
+  _getCelloBalance = async (kit, account, callback) => {
+    let totalBalance = await kit.getTotalBalance(account.address)
+    let balance = kit.web3.utils.fromWei(totalBalance.CELO.toString(), "ether")
 
-    try {
-      var balance = await erc20Contract.methods.balanceOf(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
-      callback(null, parseFloat(balance))
-    } catch(ex) {
-      return callback(ex)
-    }
-  }
-
-  _getRewardsAvailable = async (web3, asset, account, callback) => {
-    let erc20Contract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
-
-    try {
-      var earned = await erc20Contract.methods.earned(account.address).call({ from: account.address });
-      earned = parseFloat(earned)/10**asset.decimals
-      callback(null, parseFloat(earned))
-    } catch(ex) {
-      return callback(ex)
-    }
+    callback(null, parseFloat(balance))
   }
 
   _checkIfApprovalIsNeeded = async (asset, account, amount, contract, callback, overwriteAddress) => {
@@ -515,7 +511,7 @@ class Store {
     const allowance = await erc20Contract.methods.allowance(account.address, contract).call({ from: account.address })
 
     const ethAllowance = web3.utils.fromWei(allowance, "ether")
-    if(parseFloat(ethAllowance) < parseFloat(amount)) {
+    if (parseFloat(ethAllowance) < parseFloat(amount)) {
       asset.amount = amount
       callback(null, asset)
     } else {
@@ -527,25 +523,25 @@ class Store {
     const web3 = new Web3(store.getStore('web3context').library.provider);
     let erc20Contract = new web3.eth.Contract(config.erc20ABI, (overwriteAddress ? overwriteAddress : asset.address))
     try {
-      if(last) {
+      if (last) {
         await erc20Contract.methods.approve(contract, web3.utils.toWei("999999999999999", "ether")).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
         callback()
       } else {
         erc20Contract.methods.approve(contract, web3.utils.toWei("999999999999999", "ether")).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-          .on('transactionHash', function(hash){
+          .on('transactionHash', function (hash) {
             callback()
           })
-          .on('error', function(error) {
+          .on('error', function (error) {
             if (!error.toString().includes("-32601")) {
-              if(error.message) {
+              if (error.message) {
                 return callback(error.message)
               }
               callback(error)
             }
           })
       }
-    } catch(error) {
-      if(error.message) {
+    } catch (error) {
+      if (error.message) {
         return callback(error.message)
       }
       callback(error)
@@ -557,12 +553,12 @@ class Store {
     const { asset, amount } = payload.content
 
     this._checkApproval(asset, account, amount, asset.rewardsAddress, (err) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
       this._callStake(asset, account, amount, (err, res) => {
-        if(err) {
+        if (err) {
           return emitter.emit(ERROR, err);
         }
 
@@ -578,26 +574,26 @@ class Store {
 
     var amountToSend = web3.utils.toWei(amount, "ether")
     if (asset.decimals != 18) {
-      amountToSend = (amount*10**asset.decimals).toFixed(0);
+      amountToSend = (amount * 10 ** asset.decimals).toFixed(0);
     }
 
     yCurveFiContract.methods.stake(amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_BALANCES, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -605,7 +601,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -618,7 +614,7 @@ class Store {
     const { asset, amount } = payload.content
 
     this._callWithdraw(asset, account, amount, (err, res) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
@@ -633,26 +629,26 @@ class Store {
 
     var amountToSend = web3.utils.toWei(amount, "ether")
     if (asset.decimals != 18) {
-      amountToSend = (amount*10**asset.decimals).toFixed(0);
+      amountToSend = (amount * 10 ** asset.decimals).toFixed(0);
     }
 
     yCurveFiContract.methods.withdraw(amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_BALANCES, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -660,7 +656,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -673,7 +669,7 @@ class Store {
     const { asset } = payload.content
 
     this._callGetReward(asset, account, (err, res) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
@@ -687,22 +683,22 @@ class Store {
     const yCurveFiContract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
 
     yCurveFiContract.methods.getReward().send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_BALANCES, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -710,7 +706,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -723,7 +719,7 @@ class Store {
     const { asset } = payload.content
 
     this._callExit(asset, account, (err, res) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
@@ -737,22 +733,22 @@ class Store {
     const yCurveFiContract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
 
     yCurveFiContract.methods.exit().send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_BALANCES, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -760,7 +756,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -773,7 +769,7 @@ class Store {
     const { executor, hash } = payload.content
 
     this._callPropose(account, executor, hash, (err, res) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
@@ -785,35 +781,35 @@ class Store {
     const web3 = new Web3(store.getStore('web3context').library.provider);
 
     const governanceContractVersion = store.getStore('governanceContractVersion')
-    const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-    const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
+    const abi = governanceContractVersion === 1 ? config.governanceABI : config.governanceV2ABI
+    const address = governanceContractVersion === 1 ? config.governanceAddress : config.governanceV2Address
 
-    const governanceContract = new web3.eth.Contract(abi,address)
+    const governanceContract = new web3.eth.Contract(abi, address)
 
     let call = null
-    if(governanceContractVersion === 1) {
+    if (governanceContractVersion === 1) {
       call = governanceContract.methods.propose()
     } else {
       call = governanceContract.methods.propose(executor, hash)
     }
 
     call.send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_BALANCES, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -821,7 +817,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -835,20 +831,20 @@ class Store {
     const web3 = new Web3(store.getStore('web3context').library.provider);
 
     this._getProposalCount(web3, account, (err, proposalCount) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
       let arr = Array.from(Array(parseInt(proposalCount)).keys())
 
-      if(proposalCount == 0) {
+      if (proposalCount == 0) {
         arr = []
       }
 
       async.map(arr, (proposal, callback) => {
         this._getProposals(web3, account, proposal, callback)
       }, (err, proposalsData) => {
-        if(err) {
+        if (err) {
           return emitter.emit(ERROR, err);
         }
 
@@ -863,13 +859,13 @@ class Store {
     try {
 
       const governanceContractVersion = store.getStore('governanceContractVersion')
-      const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-      const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
+      const abi = governanceContractVersion === 1 ? config.governanceABI : config.governanceV2ABI
+      const address = governanceContractVersion === 1 ? config.governanceAddress : config.governanceV2Address
 
       const governanceContract = new web3.eth.Contract(abi, address)
       var proposals = await governanceContract.methods.proposalCount().call({ from: account.address });
       callback(null, proposals)
-    } catch(ex) {
+    } catch (ex) {
       return callback(ex)
     }
   }
@@ -878,8 +874,8 @@ class Store {
     try {
 
       const governanceContractVersion = store.getStore('governanceContractVersion')
-      const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-      const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
+      const abi = governanceContractVersion === 1 ? config.governanceABI : config.governanceV2ABI
+      const address = governanceContractVersion === 1 ? config.governanceAddress : config.governanceV2Address
 
       const governanceContract = new web3.eth.Contract(abi, address)
       var proposal = await governanceContract.methods.proposals(number).call({ from: account.address });
@@ -918,7 +914,7 @@ class Store {
       proposal.quorumRequired = governanceContractVersion === 1 ? 'na' : proposal.quorumRequired
 
       callback(null, proposal)
-    } catch(ex) {
+    } catch (ex) {
       return callback(ex)
     }
   }
@@ -928,14 +924,14 @@ class Store {
       const account = store.getStore('account')
       const web3 = new Web3(store.getStore('web3context').library.provider);
 
-      const governanceContract = new web3.eth.Contract(config.governanceV2ABI,config.governanceV2Address)
+      const governanceContract = new web3.eth.Contract(config.governanceV2ABI, config.governanceV2Address)
 
       const status = await governanceContract.methods.voters(account.address).call({ from: account.address })
 
-      store.setStore({votingStatus: status})
+      store.setStore({ votingStatus: status })
       emitter.emit(GET_VOTE_STATUS_RETURNED, status)
 
-    } catch(ex) {
+    } catch (ex) {
       return emitter.emit(ERROR, ex);
     }
   }
@@ -944,7 +940,7 @@ class Store {
     const account = store.getStore('account')
 
     this._callRegisterVote(account, (err, res) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
@@ -957,22 +953,22 @@ class Store {
 
     const governanceContract = new web3.eth.Contract(config.governanceV2ABI, config.governanceV2Address)
     governanceContract.methods.register().send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_VOTE_STATUS, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -980,7 +976,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -993,7 +989,7 @@ class Store {
     const { proposal } = payload.content
 
     this._callVoteFor(proposal, account, (err, res) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
@@ -1005,28 +1001,28 @@ class Store {
     const web3 = new Web3(store.getStore('web3context').library.provider);
 
     const governanceContractVersion = store.getStore('governanceContractVersion')
-    const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-    const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
+    const abi = governanceContractVersion === 1 ? config.governanceABI : config.governanceV2ABI
+    const address = governanceContractVersion === 1 ? config.governanceAddress : config.governanceV2Address
 
-    const governanceContract = new web3.eth.Contract(abi,address)
+    const governanceContract = new web3.eth.Contract(abi, address)
 
     governanceContract.methods.voteFor(proposal.id).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_PROPOSALS, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -1034,7 +1030,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -1047,7 +1043,7 @@ class Store {
     const { proposal } = payload.content
 
     this._callVoteAgainst(proposal, account, (err, res) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
@@ -1059,28 +1055,28 @@ class Store {
     const web3 = new Web3(store.getStore('web3context').library.provider);
 
     const governanceContractVersion = store.getStore('governanceContractVersion')
-    const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-    const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
+    const abi = governanceContractVersion === 1 ? config.governanceABI : config.governanceV2ABI
+    const address = governanceContractVersion === 1 ? config.governanceAddress : config.governanceV2Address
 
-    const governanceContract = new web3.eth.Contract(abi,address)
+    const governanceContract = new web3.eth.Contract(abi, address)
 
     governanceContract.methods.voteAgainst(proposal.id).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_PROPOSALS, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -1088,7 +1084,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -1106,14 +1102,14 @@ class Store {
       (callbackInnerInner) => { this._getClaimableBalance(web3, asset, account, callbackInnerInner) },
       (callbackInnerInner) => { this._getClaimable(web3, asset, account, callbackInnerInner) },
     ], (err, data) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
       asset.balance = data[0]
       asset.claimableBalance = data[1]
 
-      store.setStore({claimableAsset: asset})
+      store.setStore({ claimableAsset: asset })
       emitter.emit(GET_CLAIMABLE_ASSET_RETURNED)
     })
   }
@@ -1123,9 +1119,9 @@ class Store {
 
     try {
       var balance = await erc20Contract.methods.balanceOf(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
+      balance = parseFloat(balance) / 10 ** asset.decimals
       callback(null, parseFloat(balance))
-    } catch(ex) {
+    } catch (ex) {
       return callback(ex)
     }
   }
@@ -1135,9 +1131,9 @@ class Store {
 
     try {
       var balance = await claimContract.methods.claimable(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
+      balance = parseFloat(balance) / 10 ** asset.decimals
       callback(null, parseFloat(balance))
-    } catch(ex) {
+    } catch (ex) {
       return callback(ex)
     }
   }
@@ -1148,12 +1144,12 @@ class Store {
     const { amount } = payload.content
 
     this._checkApproval(asset, account, amount, config.claimAddress, (err) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
       this._callClaim(asset, account, amount, (err, res) => {
-        if(err) {
+        if (err) {
           return emitter.emit(ERROR, err);
         }
 
@@ -1169,26 +1165,26 @@ class Store {
 
     var amountToSend = web3.utils.toWei(amount, "ether")
     if (asset.decimals != 18) {
-      amountToSend = (amount*10**asset.decimals).toFixed(0);
+      amountToSend = (amount * 10 ** asset.decimals).toFixed(0);
     }
 
     claimContract.methods.claim(amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
+      .on('transactionHash', function (hash) {
         console.log(hash)
         callback(null, hash)
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on('confirmation', function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
+        if (confirmationNumber == 2) {
           dispatcher.dispatch({ type: GET_CLAIMABLE_ASSET, content: {} })
         }
       })
-      .on('receipt', function(receipt){
+      .on('receipt', function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -1196,7 +1192,7 @@ class Store {
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
+          if (error.message) {
             return callback(error.message)
           }
           callback(error)
@@ -1214,14 +1210,14 @@ class Store {
       (callbackInnerInner) => { this._getClaimableBalance(web3, asset, account, callbackInnerInner) },
       (callbackInnerInner) => { this._getClaimable(web3, asset, account, callbackInnerInner) },
     ], (err, data) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
       asset.balance = data[0]
       asset.claimableBalance = data[1]
 
-      store.setStore({claimableAsset: asset})
+      store.setStore({ claimableAsset: asset })
       emitter.emit(GET_CLAIMABLE_RETURNED)
     })
   }
@@ -1231,10 +1227,10 @@ class Store {
       const account = store.getStore('account')
       const web3 = new Web3(store.getStore('web3context').library.provider);
 
-      const governanceContract = new web3.eth.Contract(config.governanceABI,config.governanceAddress)
+      const governanceContract = new web3.eth.Contract(config.governanceABI, config.governanceAddress)
 
       let balance = await governanceContract.methods.balanceOf(account.address).call({ from: account.address })
-      balance = parseFloat(balance)/10**18
+      balance = parseFloat(balance) / 10 ** 18
 
       const voteLock = await governanceContract.methods.voteLock(account.address).call({ from: account.address })
       const currentBlock = await web3.eth.getBlockNumber()
@@ -1247,7 +1243,7 @@ class Store {
 
       emitter.emit(GET_YCRV_REQUIREMENTS_RETURNED, returnOBJ)
 
-    } catch(ex) {
+    } catch (ex) {
       return emitter.emit(ERROR, ex);
     }
   }
@@ -1257,12 +1253,12 @@ class Store {
       const account = store.getStore('account')
       const web3 = new Web3(store.getStore('web3context').library.provider);
 
-      const governanceContract = new web3.eth.Contract(config.governanceV2ABI,config.governanceV2Address)
-      
+      const governanceContract = new web3.eth.Contract(config.governanceV2ABI, config.governanceV2Address)
+
       const breaker = await governanceContract.methods.breaker().call()
       const voteLock = await governanceContract.methods.voteLock(account.address).call({ from: account.address })
       const currentBlock = await web3.eth.getBlockNumber()
-    
+
       const returnOBJ = {
         breakerEnabled: breaker,
         voteLockValid: voteLock > currentBlock,
@@ -1271,7 +1267,7 @@ class Store {
 
       emitter.emit(GET_GOVERNANCE_REQUIREMENTS_RETURNED, returnOBJ)
 
-    } catch(ex) {
+    } catch (ex) {
       return emitter.emit(ERROR, ex);
     }
   }
@@ -1281,14 +1277,36 @@ class Store {
       const url = 'https://gasprice.poa.network/'
       const priceString = await rp(url);
       const priceJSON = JSON.parse(priceString)
-      if(priceJSON) {
+      if (priceJSON) {
         return priceJSON.fast.toFixed(0)
       }
       return store.getStore('universalGasPrice')
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       return store.getStore('universalGasPrice')
     }
+  }
+
+
+  lock = async (payload) => {
+    const { amount } = payload.content
+    const account = store.getStore('account')
+
+    const web3 = new Web3(store.getStore('web3context').library.provider);
+    const kit = newKitFromWeb3(web3)
+
+    const goldtoken = await kit._web3Contracts.getGoldToken()
+    const tokesToTransfer = kit.web3.utils.toWei(amount + '', 'ether')
+
+    // console.log(tokesToTransfer)
+    // console.log(config.lockerAddress)
+    const txo = await goldtoken.methods.transfer(config.lockerAddress, tokesToTransfer)
+    // console.log(txo)
+    const tx = await kit.sendTransactionObject(txo, { from: account.address })
+    const hash = await tx.getHash()
+    const receipt = await tx.waitReceipt()
+
+    return emitter.emit(LOCK_RETURNED, hash);
   }
 }
 
