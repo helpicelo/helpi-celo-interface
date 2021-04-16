@@ -249,8 +249,8 @@ function MyComponent(props) {
         var display = name;
         if (name === 'Celo') {
           url = require('../../assets/icn-metamask.svg')
-        } else if (name === 'Valora') {
-          url = require('../../assets/icn-valora.svg')
+        // } else if (name === 'Valora') {
+        //   url = require('../../assets/icn-valora.svg')
         } else if (name === 'WalletConnect') {
           url = require('../../assets/walletConnectIcon.svg')
         } else if (name === 'TrustWallet') {
