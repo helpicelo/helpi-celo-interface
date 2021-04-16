@@ -204,7 +204,7 @@ class Header extends Component {
     } = this.props;
 
     return (
-      <div className={ (window.location.pathname==='/'+screen || (window.location.pathname==='/stake' && screen==='staking')  || (window.location.pathname==='/propose' && screen==='vote') )?classes.linkActive:classes.link } onClick={ () => { this.nav(screen) } }>
+      <div className={ (window.location.pathname==='/'+screen || (window.location.pathname==='/stake' && screen==='staking') )?classes.linkActive:classes.link } onClick={ () => { this.nav(screen) } }>
         <Typography variant={'h4'} className={ `title` }>{ screen }</Typography>
       </div>
     )
@@ -216,7 +216,7 @@ class Header extends Component {
     } = this.props;
 
     return (
-      <div className={ (window.location.pathname==='/'+screen || (window.location.pathname==='/stake' && screen==='staking')  || (window.location.pathname==='/propose' && screen==='vote') )?classes.linkActive:classes.link } onClick={ () => { window.open(url, "_blank") } }>
+      <div className={ (window.location.pathname==='/'+screen || (window.location.pathname==='/stake' && screen==='staking') )?classes.linkActive:classes.link } onClick={ () => { window.open(url, "_blank") } }>
         <Typography variant={'h4'} className={ `title` }>{ screen }</Typography>
       </div>
     )
