@@ -1302,7 +1302,8 @@ class Store {
     // console.log(config.lockerAddress)
     const txo = await goldtoken.methods.transfer(config.lockerAddress, tokesToTransfer)
     // console.log(txo)
-    const tx = await kit.sendTransactionObject(txo, { from: account.address })
+    const gasEstimate = kit.gasEstimate
+    const tx = await kit.sendTransactionObject(txo, { from: account.address, gasPrice: gasEstimate})
     const hash = await tx.getHash()
     const receipt = await tx.waitReceipt()
 

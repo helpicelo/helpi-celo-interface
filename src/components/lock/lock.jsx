@@ -9,6 +9,7 @@ import {
   InputAdornment,
   Grid
 } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import LaunchIcon from '@material-ui/icons/Launch';
 import Loader from '../loader'
 import Snackbar from '../snackbar'
@@ -181,9 +182,6 @@ class Lock extends Component {
 
     const CeloAsset = store.getStore('CeloAsset')
     const cHLPAsset = store.getStore('cHLPAsset')
-
-    console.log(CeloAsset)
-
     this.setState({
       ...this.state,
       CeloAsset: CeloAsset,
@@ -270,14 +268,14 @@ class Lock extends Component {
                 justify="space-between"
                 alignItems="center"
               >
-                <Button
+                  <Button
                     className={classes.lockButton}
                     variant="outlined"
                     color="primary"
                     disabled={loading}
                     onClick={() => { this.onLock(this.state['' + CeloAsset.id + '_' + 'lock']) }}
                   >
-                    <Typography variant={'h4'}>Lock tokens</Typography>
+                    {(loading) ? <CircularProgress color="primary" /> : <Typography variant={'h4'}>Lock tokens</Typography>}
                   </Button>
                   <div className={classes.buttonContainer}>
                     <Typography variant={'h4'}>SmartContract</Typography>
@@ -297,6 +295,10 @@ class Lock extends Component {
   }
 
   onLock = (amount) => {
+    this.setState({
+      ...this.state,
+      loading: true,
+    })
     console.log('amount',amount)
     dispatcher.dispatch({ type: LOCK, content: {amount} })
   }
@@ -317,11 +319,13 @@ class Lock extends Component {
     return (
       <div className={classes.valContainer} key={asset.id + '_' + type}>
         <div className={classes.balances}>
-          {type === 'lock' && <Typography variant='h4'
-            onClick={() => { this.setAmount(asset.id, type, (asset ? asset.balance : 0)) }}
-            className={classes.value}
-            noWrap>{'Balance: ' + (asset && asset.balance ? (Math.floor(asset.balance * 10000) / 10000).toFixed(4) : '0.0000')}
-            {asset ? asset.symbol : ''}</Typography>}
+          {type === 'lock' && 
+            <Typography variant='h4'
+              onClick={() => { this.setAmount(asset.id, type, (asset ? asset.balance : 0)) }}
+              className={classes.value}
+              noWrap>{'Balance: ' + (asset && asset.balance ? (Math.floor(asset.balance * 10000) / 10000).toFixed(4) : '0.0000')}
+              {asset ? asset.symbol : ''}
+            </Typography>}
         </div>
         <div>
           <TextField
